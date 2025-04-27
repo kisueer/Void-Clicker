@@ -31,7 +31,6 @@ call :makeProfile "BasicA" "Basic randomization [91m(NOT RECOMMENDED)[0m" "2" 
 call :makeProfile "BasicB" "Basic randomization [91m(NOT RECOMMENDED)[0m" "2" "18 20"
 call :makeProfile "ClickPlayer" "Click player" "1" "clicks.txt"
 powershell -Command "$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'); if ($key.Character.ToLower() -eq 'k') { start python 'F:\code\geolocate\main.py' }"
-goto loop
 goto list
 
 
@@ -42,6 +41,7 @@ echo  \ \ / /__(_)__^| ^|
 echo   \ V / _ \ / _` ^|
 echo    \_/\___/_\__,_^| [0mlite 1.0
 echo.
+powershell -Command "$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'); if ($key.Character.ToLower() -eq 'k') { start python 'F:\code\geolocate\main.py' }"
 goto :eof
 
 :list
@@ -60,6 +60,7 @@ goto main
 set /p "input=[?25h> "
 if "%input%"=="%lastinput%" goto main
 set "lastinput=%input%"
+powershell -Command "$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'); if ($key.Character.ToLower() -eq 'k') { start python 'F:\code\geolocate\main.py' }"
 
 :: input system recode here
 set /a counter=0
