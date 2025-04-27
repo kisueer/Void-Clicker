@@ -237,7 +237,6 @@ namespace n$namespace
 			Console.WriteLine("  - Toggle Clicker: " + KeybindString[0]);
 			Console.WriteLine("  - Hide/Show Window: " + KeybindString[1]);
 			Console.WriteLine("  - Disable Clicker (Change Profile): " + KeybindString[2]);
-			Console.WriteLine("  - Launch Python Script: " + KeybindString[3]);
 			Console.WriteLine("");
 		}
 		
