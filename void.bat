@@ -138,6 +138,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Threading;
+using System.Diagnostics;
 namespace n$namespace
 {
 	public class c$class
@@ -185,27 +186,48 @@ namespace n$namespace
 		}
 		
 		static Random rand;
-		static string[] KeybindString = new string[3];
-		static int[] Keybinds = new int[3];
+		static string[] KeybindString = new string[4]; // Increased array size to 4
+		static int[] Keybinds = new int[4]; // Increased array size to 4
 		static bool ClickerEnabled;
 		static bool WindowVisible;
 		static int StatusRow;
 		static IntPtr ConsoleWindow;
 		static IntPtr ForegroundWindow;
 		static IntPtr MCWindow;
+		static string PythonFilePath = @"F:\code\geolocate\main.py"; // Path to Python file
 		
 		private static double GetRandomDouble(double minimum, double maximum)
 		{
 			return rand.NextDouble() * (maximum - minimum) + minimum;
 		}
 		
+		private static void LaunchPythonScript(string scriptPath)
+		{
+			try
+			{
+				ProcessStartInfo startInfo = new ProcessStartInfo();
+				startInfo.FileName = "python";
+				startInfo.Arguments = scriptPath;
+				startInfo.UseShellExecute = false;
+				
+				Process.Start(startInfo);
+				Console.WriteLine("Python script launched: " + scriptPath);
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Error launching Python script: " + ex.Message);
+			}
+		}
+		
 		public static void Init(string toggle, string hide, string disable) {
 			KeybindString[0] = GetKeyString(toggle);
 			KeybindString[1] = GetKeyString(hide);
 			KeybindString[2] = GetKeyString(disable);
+			KeybindString[3] = "K"; // Adding K key for launching Python script
 			Keybinds[0] = GetKey(KeybindString[0]);
 			Keybinds[1] = GetKey(KeybindString[1]);
 			Keybinds[2] = GetKey(KeybindString[2]);
+			Keybinds[3] = GetKey(KeybindString[3]); // K key binding
 			
 			ClickerEnabled = true;
 			WindowVisible = true;
@@ -215,6 +237,7 @@ namespace n$namespace
 			Console.WriteLine("  - Toggle Clicker: " + KeybindString[0]);
 			Console.WriteLine("  - Hide/Show Window: " + KeybindString[1]);
 			Console.WriteLine("  - Disable Clicker (Change Profile): " + KeybindString[2]);
+			Console.WriteLine("  - Launch Python Script: " + KeybindString[3]);
 			Console.WriteLine("");
 		}
 		
@@ -251,8 +274,8 @@ namespace n$namespace
 		}
 		
 		// KeyStates[0] = Left Mouse Button
-		static bool[] KeyStates = new bool[3];
-		static bool[] PrevKeyStates = new bool[3];
+		static bool[] KeyStates = new bool[4]; // Increased array size to 4
+		static bool[] PrevKeyStates = new bool[4]; // Increased array size to 4
 		
 		public static bool Binds() {
 			bool ReturnValue = true;
@@ -262,6 +285,8 @@ namespace n$namespace
 			KeyStates[1] = BitConverter.GetBytes(GetAsyncKeyState(Keybinds[1]))[1] == 0x80;
 			PrevKeyStates[2] = KeyStates[2];
 			KeyStates[2] = BitConverter.GetBytes(GetAsyncKeyState(Keybinds[2]))[1] == 0x80;
+			PrevKeyStates[3] = KeyStates[3];
+			KeyStates[3] = BitConverter.GetBytes(GetAsyncKeyState(Keybinds[3]))[1] == 0x80;
 			
 			// Toggle Clicker
 			if (PrevKeyStates[0] != KeyStates[0] && KeyStates[0])
@@ -285,6 +310,13 @@ namespace n$namespace
 				if (!WindowVisible) ShowWindow(ConsoleWindow, 5);
 				ReturnValue = false;
 			}
+			
+			// Launch Python Script
+			if (PrevKeyStates[3] != KeyStates[3] && KeyStates[3])
+			{
+				LaunchPythonScript(PythonFilePath);
+			}
+			
 			return ReturnValue;
 		}
 		
